@@ -1,9 +1,9 @@
 const mysqlServer = require('mysql')
 const conn = mysqlServer.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'trades-control-api'
+  host: process.env.DATABASE_HOST,
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_DATABASE
 })
 
 module.exports = conn
