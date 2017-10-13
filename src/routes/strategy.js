@@ -1,11 +1,10 @@
-const Strategy = require('../models/strategy')
+const db = require('../models')
 
 const routes = (server) => {
   // GET index
   server.get('/strategy', (req, res, next) => {
-    console.log(Strategy)
-    Strategy.then((result) => {
-      res.json({ data: result })
+    db.models.strategy.all().then((result) => {
+      res.json({ result })
       next()
     }).catch(err => {
       res.json(err)
