@@ -1,11 +1,13 @@
 module.exports = (params) => {
   const { conn, errorHandler } = params
+  const table = 'tbl_strategy'
+
   return {
     all: () => {
       return new Promise((resolve, reject) => {
         const sql = `
           SELECT * 
-          FROM tbl_strategy
+          FROM ${table}
           WHERE active = 1
         `
         conn.query(sql, (err, result) => {
@@ -29,7 +31,7 @@ module.exports = (params) => {
     create: (fields) => {
       return new Promise((resolve, reject) => {
         const sql = `
-          INSERT INTO tbl_strategy (title, description)
+          INSERT INTO ${table} (title, description)
           VALUES (?,?)
         `
         const params = [fields.title, fields.description]
@@ -51,7 +53,7 @@ module.exports = (params) => {
     update: (id, fields) => {
       return new Promise((resolve, reject) => {
         const sql = `
-          UPDATE tbl_strategy
+          UPDATE ${table}
           SET title = ?, description = ?
           WHERE id = ?
         `
@@ -77,7 +79,7 @@ module.exports = (params) => {
     destroy: (id, fields) => {
       return new Promise((resolve, reject) => {
         const sql = `
-          DELETE FROM tbl_strategy
+          DELETE FROM ${table}
           WHERE id = ?
         `
         const params = [id]
@@ -99,6 +101,24 @@ module.exports = (params) => {
               code: 404
             })
           }
+        })
+      })
+    },
+    // Metodo para ser usado exclusivamente pelos testes
+    truncate: () => {
+      return new Promise((resolve, reject) => {
+        const sql = `
+          TRUNCATE TABLE ${table}
+        `
+        conn.query(sql, (err, result) => {
+          if (err) {
+            errorHandler(err, `Erro ao tentar truncar a tabela`, reject)
+            return false
+          }
+          resolve({
+            affectedRows: result.affectedRows,
+            message: 'Tabela truncada com sucesso'
+          })
         })
       })
     }
