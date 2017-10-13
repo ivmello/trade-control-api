@@ -7,10 +7,10 @@ const routes = (server) => {
       res.json(
         await db.models.strategy.all()
       )
-      next()
     } catch (err) {
       res.json(err)
     }
+    next()
   })
 
   // POST create
@@ -19,10 +19,10 @@ const routes = (server) => {
       res.json(
         await db.models.strategy.create(req.body)
       )
-      next()
     } catch (err) {
       res.json(err)
     }
+    next()
   })
 
   // PUT update
@@ -32,10 +32,10 @@ const routes = (server) => {
       res.json(
         await db.models.strategy.update(id, req.body)
       )
-      next()
     } catch (err) {
       res.json(err)
     }
+    next()
   })
 
   // DELETE update
@@ -45,10 +45,10 @@ const routes = (server) => {
       res.json(
         await db.models.strategy.destroy(id)
       )
-      next()
     } catch (err) {
       res.json(err)
     }
+    next()
   })
 }
 

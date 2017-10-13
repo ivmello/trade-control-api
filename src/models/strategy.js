@@ -10,7 +10,7 @@ module.exports = (params) => {
         `
         conn.query(sql, (err, result) => {
           if (err) {
-            errorHandler(err, 'Error to fetch strategies', reject)
+            errorHandler(err, 'Erro ao listar os itens', reject)
             return false
           }
           resolve({
@@ -36,15 +36,14 @@ module.exports = (params) => {
 
         conn.query(sql, params, (err, result) => {
           if (err) {
-            errorHandler(err, 'Error on save item', reject)
+            errorHandler(err, 'Erro ao tentar salvar o item', reject)
             return false
           }
           resolve({
             status: 201,
-            data: {
-              id: result.insertId,
-              message: 'Item successfully created'
-            }
+            affectedRows: result.affectedRows,
+            message: 'Registro inserido com sucesso',
+            id: result.insertId
           })
         })
       })
@@ -59,25 +58,19 @@ module.exports = (params) => {
         const params = [fields.title, fields.description, id]
 
         conn.query(sql, params, (err, result) => {
-          if (err) {
-            errorHandler(err, `Error on update item #${id}`, reject)
+          if (err || !result.affectedRows) {
+            errorHandler(err, `Erro ao tentar atualizar o item #${id}`, reject)
             return false
           }
-
-          if (result.affectedRows) {
-            resolve({
-              status: 200,
-              data: {
-                id,
-                message: 'Item successfully updated'
-              }
-            })
-          } else {
-            resolve({
-              error: `Item do not exists`,
-              code: 404
-            })
-          }
+          resolve({
+            status: 200,
+            affectedRows: result.affectedRows,
+            message: 'Item atualizado com sucesso',
+            data: {
+              title: fields.title,
+              description: fields.description
+            }
+          })
         })
       })
     },
@@ -91,20 +84,18 @@ module.exports = (params) => {
 
         conn.query(sql, params, (err, result) => {
           if (err) {
-            errorHandler(err, `Error on delete item #${id}`, reject)
+            errorHandler(err, `Erro ao tentar deletar o item #${id}`, reject)
             return false
           }
           if (result.affectedRows) {
             resolve({
               status: 200,
-              data: {
-                id,
-                message: 'Item successfully removed'
-              }
+              affectedRows: result.affectedRows,
+              message: 'Item removido com sucesso'
             })
           } else {
             resolve({
-              error: `Item do not exists`,
+              error: `Item não existe`,
               code: 404
             })
           }
