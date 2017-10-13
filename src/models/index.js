@@ -1,5 +1,8 @@
 const fs = require('fs')
 const path = require('path')
+const conn = require('../services/database')
+const errorHandler = require('../services/errorHandler')
+
 const basename = path.basename(module.filename)
 const models = {}
 
@@ -9,7 +12,7 @@ fs
   .forEach((file) => {
     let module = file.split('.js')[0]
     if (module !== 'index') {
-      models[module] = require(path.join(__dirname, module))
+      models[module] = require(path.join(__dirname, module))({ conn, errorHandler })
     }
   })
 
